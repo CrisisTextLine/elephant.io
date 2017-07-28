@@ -24,6 +24,7 @@ class Client {
 
     private $socketIOUrl;
     private $serverHost;
+    private $hostHeader;
     private $serverPort = 80;
     private $session;
     private $fd;
@@ -261,7 +262,7 @@ class Client {
         $key = $this->generateKey();
 
         $out  = "GET /socket.io/1/websocket/".$this->session['sid']." HTTP/1.1\r\n";
-        $out .= "Host: ".$this->serverHost."\r\n";
+        $out .= "Host: ".$this->hostHeader."\r\n";
         $out .= "Upgrade: WebSocket\r\n";
         $out .= "Connection: Upgrade\r\n";
         $out .= "Sec-WebSocket-Key: ".$key."\r\n";
@@ -306,6 +307,7 @@ class Client {
     private function parseUrl() {
         $url = parse_url($this->socketIOUrl);
         $this->serverHost = $url['host'];
+        $this->hostHeader = $url['host'];
         $this->serverPort = isset($url['port']) ? $url['port'] : null;
 
         if ($url['scheme'] == 'https') {
